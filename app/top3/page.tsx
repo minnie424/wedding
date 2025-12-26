@@ -169,18 +169,6 @@ for (const row of data ?? []) {
         <div style={styles.nameLine}>
           {current.uploader_name} 
         </div>
-
-        <button
-          style={styles.smallButton}
-          onClick={(e) => {
-            e.stopPropagation();
-            setFinished(false);
-            setIndex(0);
-            loadTop3();
-          }}
-        >
-          Refresh Top 3
-        </button>
       </div>
     </div>
   );
