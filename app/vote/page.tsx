@@ -126,9 +126,11 @@ export default function Home() {
   const myVoteCount = myVotes.size;
   return (
     <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
-      <h1>📸 Wedding Photo Game</h1>
+      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
+        Minnie & Jason&apos;s Wedding Party
+      </h1>
       <p>
-        Pick your <b>Top 3</b> favourites. Your votes: <b>{myVoteCount}/3</b>
+        Pick your <b>Top 3</b> favourite photos. Your votes: <b>{myVoteCount}/3</b>
       </p>
 
       <section>

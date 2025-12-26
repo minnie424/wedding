@@ -75,7 +75,7 @@ export default function Home() {
 
   return (
     <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
-      <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>
+      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
         Minnie & Jason&apos;s Wedding Party
       </h1>
 
@@ -95,6 +95,11 @@ export default function Home() {
 
         <div style={{ display: "grid", gap: 12 }}>
           <input
+            type="text"
+            autoComplete="name"
+            autoCorrect="off"
+            autoCapitalize="words"
+            spellCheck={false}
             value={name}
             required
             onChange={(e) => setName(e.target.value)}
