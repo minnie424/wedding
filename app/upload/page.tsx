@@ -107,7 +107,7 @@ export default function Home() {
               padding: "14px 16px",
               borderRadius: 12,
               border: "1px solid rgba(255,255,255,0.2)",
-              background: "#000",
+              background: "#fff",
               color: "#fff",
               fontSize: 16,
             }}
