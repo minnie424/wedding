@@ -22,38 +22,18 @@ export default function Top3Page() {
   setLoading(true);
 
   const { data, error } = await supabase
-    .from("photos_with_votes")
+    .from("top3_winners")
     .select("id, storage_path, uploader_name, vote_count")
     .order("vote_count", { ascending: false })
-    .order("id", { ascending: true })
-    .limit(200); // fetch more so we can de-dupe
+    .order("id", { ascending: true });
 
   if (error) {
     alert(error.message);
     setLoading(false);
     return;
   }
-
-  const seen = new Set<string>();
-const uniqueTop: TopPhoto[] = [];
-
-for (const row of data ?? []) {
-  const name = (row.uploader_name ?? "")
-    .trim()
-    .toLowerCase();
-
-  if (!name) continue; // skip empty names
-
-  if (seen.has(name)) continue;
-  seen.add(name);
-
-  uniqueTop.push(row as TopPhoto);
-  if (uniqueTop.length === 3) break;
-}
-
-
   // Reverse: #3 → #2 → #1 (if you still want reveal from 3rd to 1st)
-  const reversed = [...uniqueTop].reverse();
+  const reversed = [...data].reverse();
 
   setTop(reversed);
   setIndex(0);

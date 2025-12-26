@@ -109,7 +109,7 @@ export default function Home() {
               borderRadius: 12,
               border: "1px solid #000",
               background: "#fff",
-              color: "#fff",
+              color: "#444",
               fontSize: 16,
             }}
           />

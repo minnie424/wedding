@@ -22,7 +22,9 @@ export default function Home() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [myVotes, setMyVotes] = useState<Set<string>>(new Set());
   const voterKey = useMemo(() => getVoterKey(), []);
+  const [uploadingOpen, setUploadingOpen] = useState<boolean | null>(null);
   const [votingOpen, setVotingOpen] = useState<boolean | null>(null);
+  const [savingUploading, setSavingUploading] = useState(false);
   const [savingVoting, setSavingVoting] = useState(false);
 
   const styles = {
@@ -79,6 +81,18 @@ export default function Home() {
     setMyVotes(new Set((v ?? []).map((x: any) => x.photo_id)));
   }
   
+  async function loadUploadingStatus() {
+  const { data, error } = await supabase
+    .from("app_settings")
+    .select("uploading_open")
+    .eq("id", 1)
+    .single();
+
+  if (!error && data) {
+    setUploadingOpen(!!data.uploading_open);
+  }
+}
+
   async function loadVotingStatus() {
   const { data, error } = await supabase
     .from("app_settings")
@@ -90,6 +104,28 @@ export default function Home() {
     setVotingOpen(!!data.voting_open);
   }
 }
+async function toggleUploading() {
+  setSavingVoting(true);
+
+  const res = await fetch("/api/admin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      uploading_open: !uploadingOpen,
+    }),
+  });
+
+  const json = await res.json().catch(() => ({}));
+  setSavingVoting(false);
+
+  if (!res.ok) {
+    alert(JSON.stringify(json) || "Failed to update voting status");
+    return;
+  }
+
+  setUploadingOpen(!uploadingOpen);
+}
+
 async function toggleVoting() {
   setSavingVoting(true);
 
@@ -97,6 +133,7 @@ async function toggleVoting() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      uploading_open: !uploadingOpen,
       voting_open: !votingOpen,
     }),
   });
@@ -130,78 +167,6 @@ async function toggleVoting() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function handleUpload() {
-    if (!name.trim()) {
-  alert("Please enter your name before uploading.");
-  return;
-  }
-    if (!files.length) return;
-    setBusy(true);
-    try {
-      for (const f of files) {
-        const file = await toJpegIfHeic(f);
-
-        // lightweight client resize/compress is a plus; skipping for simplicity
-        const ext = file.name.split(".").pop() || "jpg";
-        const path = `${Date.now()}_${crypto.randomUUID()}.${ext}`;
-
-        const { error: upErr } = await supabase
-          .storage
-          .from("wedding-photos")
-          .upload(path, file, { contentType: file.type, upsert: false });
-
-        if (upErr) throw upErr;
-
-        const { data: pub } = supabase
-          .storage
-          .from("wedding-photos")
-          .getPublicUrl(path);
-
-        const public_url = pub.publicUrl;
-
-        const { error: dbErr } = await supabase
-          .from("photos")
-          .insert({
-            storage_path: path,
-            public_url,
-            uploader_name: name || null,
-          });
-
-        if (dbErr) throw dbErr;
-      }
-
-      setFiles([]);
-      await refresh();
-    } finally {
-      setBusy(false);
-    }
-  }
-
-async function toggleVote(photoId: string) {
-  const isSelected = myVotes.has(photoId);
-
-  const res = await fetch("/api/vote", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      photo_id: photoId,
-      voter_key: voterKey,
-      action: isSelected ? "remove" : "add",
-    }),
-  });
-
-  const json = await res.json().catch(() => ({}));
-
-  if (!res.ok) {
-    // If they hit the 3-vote limit, show message and keep current selections
-    alert(json?.error || "Vote failed");
-    return;
-  }
-
-  await refresh();
-}
-
-  const myVoteCount = myVotes.size;
   return (
     <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
@@ -209,8 +174,23 @@ async function toggleVote(photoId: string) {
       </h1>
 <section style={{ marginBottom: 24, padding: 12, border: "1px solid #eee", borderRadius: 12 }}>
   <h2>Admin Control</h2>
-
   <div style={{ marginBottom: 8 }}>
+    Uploading status:{" "}
+    <b>
+      {uploadingOpen === null ? "Loading…" : uploadingOpen ? "OPEN" : "CLOSED"}
+    </b>
+    <button
+    onClick={toggleUploading}
+    disabled={savingUploading || uploadingOpen === null}
+    style={styles.outlineButton}
+  >
+    {savingUploading
+      ? "Saving…"
+      : uploadingOpen
+      ? "Stop uploading"
+      : "Start uploading"}
+  </button>
+    
     Voting status:{" "}
     <b>
       {votingOpen === null ? "Loading…" : votingOpen ? "OPEN" : "CLOSED"}
