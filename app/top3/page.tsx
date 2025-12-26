@@ -87,7 +87,7 @@ export default function Top3Page() {
     return (
       <div style={styles.fullscreen}>
         <div style={{ ...styles.centerText, textAlign: "center" }}>
-          <div style={{ fontSize: 32, marginBottom: 12 }}>📸 Top 3 Photos</div>
+          <div style={{ fontSize: 32, marginBottom: 12 }}>Top 3 Photos</div>
 
           <button
             onClick={() => setStarted(true)}
