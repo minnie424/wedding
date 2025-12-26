@@ -219,7 +219,15 @@ async function toggleVote(photoId: string) {
   href="https://wedding-minnie-jason.vercel.app/slideshow"
   target="_blank"
   rel="noopener noreferrer"
-  style={{ padding: "8px 12px", borderRadius: 8 }}
+  style={{    display: "inline-block",
+    padding: "12px 24px",
+    borderRadius: 10,
+    backgroundColor: "#ffffff",
+    color: "#000000",
+    textDecoration: "none",
+    fontWeight: 600,
+    boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+    cursor: "pointer", }}
 >
   Slideshow
 </a>
@@ -227,7 +235,15 @@ async function toggleVote(photoId: string) {
   href="https://wedding-minnie-jason.vercel.app/top3"
   target="_blank"
   rel="noopener noreferrer"
-  style={{ padding: "8px 12px", borderRadius: 8 }}
+  style={{    display: "inline-block",
+    padding: "12px 24px",
+    borderRadius: 10,
+    backgroundColor: "#ffffff",
+    color: "#000000",
+    textDecoration: "none",
+    fontWeight: 600,
+    boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+    cursor: "pointer",}}
 >
   Top 3 Photos
 </a></div>
