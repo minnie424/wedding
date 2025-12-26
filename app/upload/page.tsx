@@ -22,6 +22,15 @@ export default function Home() {
   const [myVotes, setMyVotes] = useState<Set<string>>(new Set());
   const voterKey = useMemo(() => getVoterKey(), []);
 
+  const cardStyle = {
+  maxWidth: 420,
+  margin: "0 auto",
+  padding: 24,
+  borderRadius: 20,
+  background: "linear-gradient(180deg, #111, #1a1a1a)",
+  border: "1px solid rgba(255,255,255,0.15)",
+  boxShadow: "0 20px 50px rgba(0,0,0,0.6)",
+};
 
   async function handleUpload() {
     if (!name.trim()) {
@@ -73,17 +82,52 @@ export default function Home() {
 
   return (
     <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
-      <h1>📸 Wedding Photo Game</h1>
+      <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>
+  📸    Wedding Photo Game
+      </h1>
 
       <section style={{ border: "1px solid #ddd", borderRadius: 12, padding: 16, marginBottom: 16 }}>
-        <h2>Upload Photos for Minnie and Jason</h2>
-        <div style={{ display: "grid", gap: 8 }}>
+        <p style={{ opacity: 0.8, marginBottom: 24 }}>
+          Share your memories with <b>Minnie & Jason</b> 🤍
+        </p>
+        <div style={{ display: "grid", gap: 12 }}>
           <input
-            value={name}
-            required
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your Name*"
+            placeholder="Your name*"
+            style={{
+              width: "100%",
+              padding: "14px 16px",
+              borderRadius: 12,
+              border: "1px solid rgba(255,255,255,0.2)",
+              background: "#000",
+              color: "#fff",
+              fontSize: 16,
+              marginBottom: 14,
+            }}
           />
+          <label
+            style={{
+              display: "block",
+              padding: "14px",
+              borderRadius: 12,
+              border: "1px dashed rgba(255,255,255,0.25)",
+              textAlign: "center",
+              marginBottom: 8,
+              cursor: "pointer",
+            }}
+          >
+            📷 Select photos from your phone
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              style={{ display: "none" }}
+            />
+          </label>
+
+          <p style={{ fontSize: 13, opacity: 0.6, marginBottom: 16 }}>
+            You can upload up to 10 photos
+          </p>
+
           <input
             type="file"
             accept="image/*,.heic"
