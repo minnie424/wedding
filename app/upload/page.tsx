@@ -23,7 +23,7 @@ export default function Home() {
   const [myVotes, setMyVotes] = useState<Set<string>>(new Set());
   const voterKey = useMemo(() => getVoterKey(), []);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+  const [fileInputKey, setFileInputKey] = useState(0);
 
   const cardStyle = {
   maxWidth: 420,
@@ -75,17 +75,21 @@ export default function Home() {
         if (dbErr) throw dbErr;
       }
       setFiles([]);                // clear React state
+      setFileInputKey((k) => k + 1);
         if (fileInputRef.current) {
         fileInputRef.current.value = ""; // clear native input (iOS needs this)
       }
       
     } finally {
       alert("Successfully uploaded.");
+      setFiles([]);
+      setFileInputKey((k) => k + 1);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       setBusy(false);
     }
   }
 
-
+<header>Minnie & Jason's Wedding</header>
   return (
     <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
       <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>
@@ -126,10 +130,12 @@ export default function Home() {
           >
             📷 Select photos from your phone
           <input
+            key={fileInputKey}
+            ref={fileInputRef}
             type="file"
             accept="image/*,.heic"
             multiple
-            onChange={(e) => setFiles(Array.from(e.target.files || []))}
+            onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
           />
           </label>
          
