@@ -39,15 +39,6 @@ export default function Top3Page() {
     setTop(reversed as TopPhoto[]);
     setIndex(0);
     setLoading(false);
-    
-    setIndex((i) => {
-        const next = i + 1;
-        if (next >= reversed.length) {
-          setFinished(true); // stop at end
-          return i; // keep showing last photo
-        }
-        return next;
-    });
   }
 
   useEffect(() => {
@@ -64,9 +55,19 @@ export default function Top3Page() {
   }, [current]);
 
   function next() {
-    if (top.length === 0) return;
-    setIndex((i) => (i + 1) % top.length);
-  }
+  if (top.length === 0) return;
+
+  setIndex((i) => {
+    const isLast = i >= top.length - 1;
+
+    if (isLast) {
+      setFinished(true);
+      return i; // keep index (so it doesn't jump)
+    }
+
+    return i + 1;
+  });
+}
 
   if (loading) {
     return (
@@ -153,6 +154,8 @@ export default function Top3Page() {
           style={styles.smallButton}
           onClick={(e) => {
             e.stopPropagation();
+            setFinished(false);
+            setIndex(0);
             loadTop3();
           }}
         >
