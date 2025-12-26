@@ -25,6 +25,19 @@ export default function Home() {
   const [votingOpen, setVotingOpen] = useState<boolean | null>(null);
   const [savingVoting, setSavingVoting] = useState(false);
 
+  const styles = {
+  outlineButton: {
+    padding: "10px 18px",
+    borderRadius: 10,
+    border: "2px solid #333",
+    backgroundColor: "#fff",
+    color: "#000",
+    fontSize: 16,
+    fontWeight: 500,
+    cursor: "pointer",
+  },
+};
+
   async function refresh() {
     // 1) Load photos + vote counts (includes 0 votes)
     const { data, error } = await supabase
@@ -206,7 +219,7 @@ async function toggleVote(photoId: string) {
   <button
     onClick={toggleVoting}
     disabled={savingVoting || votingOpen === null}
-    style={{ padding: "8px 12px", borderRadius: 8 }}
+    style={styles.outlineButton}
   >
     {savingVoting
       ? "Saving…"
@@ -215,19 +228,16 @@ async function toggleVote(photoId: string) {
       : "Start voting"}
   </button>
 
-  <div><a
+  <div style={{
+    display: "flex",
+    gap: 16,
+    marginTop: 16,
+    flexWrap: "wrap",
+  }}><a
   href="https://wedding-minnie-jason.vercel.app/slideshow"
   target="_blank"
   rel="noopener noreferrer"
-  style={{    display: "inline-block",
-    padding: "12px 24px",
-    borderRadius: 10,
-    backgroundColor: "#ffffff",
-    color: "#000000",
-    textDecoration: "none",
-    fontWeight: 600,
-    boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
-    cursor: "pointer", }}
+  style={styles.outlineButton}
 >
   Slideshow
 </a>
@@ -235,15 +245,7 @@ async function toggleVote(photoId: string) {
   href="https://wedding-minnie-jason.vercel.app/top3"
   target="_blank"
   rel="noopener noreferrer"
-  style={{    display: "inline-block",
-    padding: "12px 24px",
-    borderRadius: 10,
-    backgroundColor: "#ffffff",
-    color: "#000000",
-    textDecoration: "none",
-    fontWeight: 600,
-    boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
-    cursor: "pointer",}}
+  style={styles.outlineButton}
 >
   Top 3 Photos
 </a></div>
