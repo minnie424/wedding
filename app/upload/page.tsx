@@ -82,8 +82,6 @@ export default function Home() {
       <section
         style={{
           border: "1px solid rgba(255,255,255,0.15)",
-          background: "linear-gradient(180deg, #111, #1a1a1a)",
-          boxShadow: "0 20px 50px rgba(0,0,0,0.6)",
           borderRadius: 20,
           padding: 24,
           maxWidth: 420,
