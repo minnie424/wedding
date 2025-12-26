@@ -118,7 +118,7 @@ async function toggleVote(photoId: string) {
             const voted = myVotes.has(p.id);
             return (
               <div key={p.id} style={{ border: "1px solid #eee", borderRadius: 12, overflow: "hidden" }}>
-                <img src={p.public_url} alt="" style={{ width: "100%", height: 180, objectFit: "cover" }} />
+                <img src={p.public_url} alt="" style={{ width: "100%", height: 180, objectFit: "contain" }} />
                 <div style={{ padding: 10, display: "grid", gap: 6 }}>  
 
                   <button
