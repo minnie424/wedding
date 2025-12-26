@@ -81,7 +81,7 @@ export default function Home() {
 
       <section
         style={{
-          border: "1px solid rgba(255,255,255,0.15)",
+          border: "1px solid rgba(188, 188, 188, 0.25)",
           borderRadius: 20,
           padding: 24,
           maxWidth: 420,
@@ -119,7 +119,7 @@ export default function Home() {
               display: "block",
               padding: "14px",
               borderRadius: 12,
-              border: "1px dashed rgba(255,255,255,0.25)",
+              border: "1px dashed rgba(188, 188, 188, 0.25)",
               textAlign: "center",
               cursor: busy ? "not-allowed" : "pointer",
               opacity: busy ? 0.6 : 1,
