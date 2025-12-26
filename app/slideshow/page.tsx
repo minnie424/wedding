@@ -74,12 +74,12 @@ export default function SlideshowPage() {
           <div style={{ fontSize: 18, opacity: 0.85, marginBottom: 22 }}>
             {photos.length} photos shared, vote for your favourite ones (max. 3)
           </div>
-          <img
+          <div><img
            src="QR code.png"
            alt="Slideshow QR Code"
            width={160}
            height={160}
-          />
+          /></div>
           <button
             onClick={() => setStarted(true)}
             style={styles.button}
