@@ -152,6 +152,7 @@ export default function Home() {
                   <img
                     src={p.public_url}
                     alt=""
+                    className="noSave"
                     style={{
                       width: "100%",
                       height: 180,
@@ -252,17 +253,6 @@ export default function Home() {
                 padding: 10,
               }}
             >
-              <span
-                style={{
-                  background: "rgba(0,0,0,0.35)",
-                  color: "white",
-                  padding: "6px 10px",
-                  borderRadius: 10,
-                  fontSize: 12,
-                }}
-              >
-                Minnie & Jason • Preview
-              </span>
             </div>
           </div>
         </div>
