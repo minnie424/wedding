@@ -58,6 +58,7 @@ export default function SlideshowPage() {
   }, [photos, index]);
 
   // ---------- UI states ----------
+  <header>Minnie & Jason's Wedding</header>
   if (photos.length === 0) {
     return (
       <div style={styles.fullscreen}>

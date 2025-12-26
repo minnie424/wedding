@@ -83,6 +83,7 @@ export default function Top3Page() {
   }
 
   // ---------- UI states ----------
+  <header>Minnie & Jason's Wedding</header>
   if (!started) {
     return (
       <div style={styles.fullscreen}>

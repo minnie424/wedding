@@ -94,7 +94,7 @@ export default function Home() {
 
       <section style={{ border: "1px solid #ddd", borderRadius: 12, padding: 16, marginBottom: 16 }}>
         <p style={{ opacity: 0.8, marginBottom: 24 }}>
-          Share funny photos <b>Minnie & Jason</b> 🤍
+          Share funny photos of <b>Minnie & Jason</b> 🤍
         </p>
         <div style={{ display: "grid", gap: 12 }}>
           <input
