@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { getVoterKey } from "@/lib/voterKey";
 import { toJpegIfHeic } from "@/lib/heic";
+import { useRef } from "react";
 
 type Photo = {
   id: string;
@@ -21,6 +22,8 @@ export default function Home() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [myVotes, setMyVotes] = useState<Set<string>>(new Set());
   const voterKey = useMemo(() => getVoterKey(), []);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
 
   const cardStyle = {
   maxWidth: 420,
@@ -71,7 +74,10 @@ export default function Home() {
 
         if (dbErr) throw dbErr;
       }
-
+      setFiles([]);                // clear React state
+        if (fileInputRef.current) {
+        fileInputRef.current.value = ""; // clear native input (iOS needs this)
+      }
       
     } finally {
       alert("Successfully uploaded.");
@@ -83,12 +89,12 @@ export default function Home() {
   return (
     <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
       <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>
-  📸    Wedding Photo Game
+      Minnie & Jason's Wedding Party
       </h1>
 
       <section style={{ border: "1px solid #ddd", borderRadius: 12, padding: 16, marginBottom: 16 }}>
         <p style={{ opacity: 0.8, marginBottom: 24 }}>
-          Share your memories with <b>Minnie & Jason</b> 🤍
+          Share funny photos <b>Minnie & Jason</b> 🤍
         </p>
         <div style={{ display: "grid", gap: 12 }}>
           <input
@@ -127,7 +133,7 @@ export default function Home() {
           />
           </label>
          
-          <button disabled={busy || files.length === 0} onClick={handleUpload}
+          <button disabled={busy || !files.length || files.length === 0} onClick={handleUpload}
             style={{
               width: "100%",
               padding: "16px",
@@ -143,6 +149,16 @@ export default function Home() {
             }}>
             {busy ? "Uploading..." : `Upload ${files.length ? `(${files.length})` : ""}`}
           </button>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
+          />
+
         </div>
       </section>
     </main>
