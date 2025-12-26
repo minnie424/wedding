@@ -19,27 +19,47 @@ export default function Top3Page() {
   const [finished, setFinished] = useState(false);
 
   async function loadTop3() {
-    setLoading(true);
+  setLoading(true);
 
-    const { data, error } = await supabase
-      .from("photos_with_votes")
-      .select("id, storage_path, uploader_name, vote_count")
-      .order("vote_count", { ascending: false })
-      .order("id", { ascending: true })
-      .limit(3);
+  const { data, error } = await supabase
+    .from("photos_with_votes")
+    .select("id, storage_path, uploader_name, vote_count")
+    .order("vote_count", { ascending: false })
+    .order("id", { ascending: true })
+    .limit(200); // fetch more so we can de-dupe
 
-    if (error) {
-      alert(error.message);
-      setLoading(false);
-      return;
-    }
-     // Reverse: #3 → #2 → #1
-    const reversed = [...(data ?? [])].reverse();
-
-    setTop(reversed as TopPhoto[]);
-    setIndex(0);
+  if (error) {
+    alert(error.message);
     setLoading(false);
+    return;
   }
+
+  const seen = new Set<string>();
+const uniqueTop: TopPhoto[] = [];
+
+for (const row of data ?? []) {
+  const name = (row.uploader_name ?? "")
+    .trim()
+    .toLowerCase();
+
+  if (!name) continue; // skip empty names
+
+  if (seen.has(name)) continue;
+  seen.add(name);
+
+  uniqueTop.push(row as TopPhoto);
+  if (uniqueTop.length === 3) break;
+}
+
+
+  // Reverse: #3 → #2 → #1 (if you still want reveal from 3rd to 1st)
+  const reversed = [...uniqueTop].reverse();
+
+  setTop(reversed);
+  setIndex(0);
+  setLoading(false);
+}
+
 
   useEffect(() => {
     loadTop3();
