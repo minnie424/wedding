@@ -202,7 +202,6 @@ async function toggleVote(photoId: string) {
 }
 
   const myVoteCount = myVotes.size;
-<header>Minnie & Jason's Wedding</header>
   return (
     <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
       <h1>📸 Wedding Photo Game</h1>
