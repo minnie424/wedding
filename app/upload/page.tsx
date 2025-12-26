@@ -83,7 +83,7 @@ export default function Home() {
   return (
     <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
       <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>
-        📸 Wedding Photo Game
+  📸    Wedding Photo Game
       </h1>
 
       <section style={{ border: "1px solid #ddd", borderRadius: 12, padding: 16, marginBottom: 16 }}>
@@ -91,8 +91,11 @@ export default function Home() {
           Share your memories with <b>Minnie & Jason</b> 🤍
         </p>
         <div style={{ display: "grid", gap: 12 }}>
-          name = <input
-            placeholder="Your name*"
+          <input
+            value={name}
+            required
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your Name*"
             style={{
               width: "100%",
               padding: "14px 16px",
@@ -104,7 +107,6 @@ export default function Home() {
               marginBottom: 14,
             }}
           />
-
           <label
             style={{
               display: "block",
@@ -117,17 +119,28 @@ export default function Home() {
             }}
           >
             📷 Select photos from your phone
-            <input
-              type="file"
-              accept="image/*,.heic"
-              multiple
-              onChange={(e) => setFiles(Array.from(e.target.files || []))}
-            />
+          <input
+            type="file"
+            accept="image/*,.heic"
+            multiple
+            onChange={(e) => setFiles(Array.from(e.target.files || []))}
+          />
           </label>
-          <p style={{ fontSize: 13, opacity: 0.6, marginBottom: 16 }}>
-            You can upload up to 10 photos
-          </p>
-          <button style={{ fontSize: 13, opacity: 0.3, marginBottom: 16 }}disabled={busy || files.length === 0} onClick={handleUpload}>  
+         
+          <button disabled={busy || files.length === 0} onClick={handleUpload}
+            style={{
+              width: "100%",
+              padding: "16px",
+              borderRadius: 14,
+              border: "none",
+              background: busy
+                ? "#444"
+                : "linear-gradient(135deg, #ffffff, #f3f3f3)",
+              color: "#000",
+              fontSize: 17,
+              fontWeight: 700,
+              cursor: busy ? "not-allowed" : "pointer",
+            }}>
             {busy ? "Uploading..." : `Upload ${files.length ? `(${files.length})` : ""}`}
           </button>
         </div>
