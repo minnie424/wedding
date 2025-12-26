@@ -91,7 +91,7 @@ export default function Home() {
           Share your memories with <b>Minnie & Jason</b> 🤍
         </p>
         <div style={{ display: "grid", gap: 12 }}>
-          <input
+          name = <input
             placeholder="Your name*"
             style={{
               width: "100%",
@@ -127,7 +127,7 @@ export default function Home() {
           <p style={{ fontSize: 13, opacity: 0.6, marginBottom: 16 }}>
             You can upload up to 10 photos
           </p>
-          <button disabled={busy || files.length === 0} onClick={handleUpload}>
+          <button style={{ fontSize: 13, opacity: 0.3, marginBottom: 16 }}disabled={busy || files.length === 0} onClick={handleUpload}>  
             {busy ? "Uploading..." : `Upload ${files.length ? `(${files.length})` : ""}`}
           </button>
         </div>
