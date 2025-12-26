@@ -38,6 +38,7 @@ export default function Top3Page() {
     setTop(reversed as TopPhoto[]);
     setIndex(0);
     setLoading(false);
+    setFinished(true);
     
   }
 
