@@ -83,7 +83,7 @@ export default function Home() {
   return (
     <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
       <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>
-  📸    Wedding Photo Game
+        📸 Wedding Photo Game
       </h1>
 
       <section style={{ border: "1px solid #ddd", borderRadius: 12, padding: 16, marginBottom: 16 }}>
@@ -104,6 +104,7 @@ export default function Home() {
               marginBottom: 14,
             }}
           />
+
           <label
             style={{
               display: "block",
@@ -118,22 +119,14 @@ export default function Home() {
             📷 Select photos from your phone
             <input
               type="file"
+              accept="image/*,.heic"
               multiple
-              accept="image/*"
-              style={{ display: "none" }}
+              onChange={(e) => setFiles(Array.from(e.target.files || []))}
             />
           </label>
-
           <p style={{ fontSize: 13, opacity: 0.6, marginBottom: 16 }}>
             You can upload up to 10 photos
           </p>
-
-          <input
-            type="file"
-            accept="image/*,.heic"
-            multiple
-            onChange={(e) => setFiles(Array.from(e.target.files || []))}
-          />
           <button disabled={busy || files.length === 0} onClick={handleUpload}>
             {busy ? "Uploading..." : `Upload ${files.length ? `(${files.length})` : ""}`}
           </button>
