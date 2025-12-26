@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { reverse } from "dns";
 
 type TopPhoto = {
   id: string;
@@ -39,11 +40,18 @@ export default function Top3Page() {
     setIndex(0);
     setLoading(false);
     
+    setIndex((i) => {
+        const next = i + 1;
+        if (next >= reversed.length) {
+          setFinished(true); // stop at end
+          return i; // keep showing last photo
+        }
+        return next;
+    });
   }
 
   useEffect(() => {
     loadTop3();
-    setFinished(true);
   }, []);
 
   const current = top[index];
@@ -88,7 +96,7 @@ export default function Top3Page() {
     return (
       <div style={styles.fullscreen}>
         <div style={{ ...styles.centerText, textAlign: "center" }}>
-          <div style={{ fontSize: 32, marginBottom: 12 }}>Top 3 Photos</div>
+          <div style={{ fontSize: 32, marginBottom: 12 }}>Reveal Favourite Photos</div>
 
           <button
             onClick={() => setStarted(true)}
