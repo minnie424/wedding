@@ -74,7 +74,7 @@ export default function Home() {
   }
 
   return (
-    <main style={{ maxWidth: 980, minHeight: "100vh", background: "#000", color: "#fff", margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
+    <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
         Minnie & Jason&apos;s Wedding Party
       </h1>
