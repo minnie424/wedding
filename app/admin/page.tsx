@@ -214,6 +214,24 @@ async function toggleVote(photoId: string) {
       ? "Stop voting"
       : "Start voting"}
   </button>
+
+  <div><a
+  href="https://wedding-minnie-jason.vercel.app/slideshow"
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{ padding: "8px 12px", borderRadius: 8 }}
+>
+  Slideshow
+</a>
+<a
+  href="https://wedding-minnie-jason.vercel.app/top3"
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{ padding: "8px 12px", borderRadius: 8 }}
+>
+  Top 3 Photos
+</a></div>
+
 </section>
 
       <section>

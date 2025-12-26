@@ -70,9 +70,8 @@ export default function SlideshowPage() {
     return (
       <div style={styles.fullscreen}>
         <div style={{ ...styles.centerText, textAlign: "center" }}>
-          <div style={{ fontSize: 32, marginBottom: 12 }}>📸 Slideshow</div>
-          <div style={{ fontSize: 18, opacity: 0.85, marginBottom: 22 }}>
-            {photos.length} photos shared, vote for your favourite ones (max. 3)
+          <div style={{ fontSize: 32, marginBottom: 12 }}>
+            Vote for your favourite photos! (max. 3)
           </div>
           <div><img
            src="QR code.png"
@@ -99,7 +98,13 @@ export default function SlideshowPage() {
     return (
       <div style={styles.fullscreen}>
         <div style={{ ...styles.centerText, textAlign: "center" }}>
-          <div style={{ fontSize: 32, marginBottom: 10 }}>🎉 Please vote (maximum 3)</div>
+          <div style={{ fontSize: 32, marginBottom: 10 }}>🎉 Please vote (max. 3)</div>
+          <div><img
+           src="QR code.png"
+           alt="Slideshow QR Code"
+           width={160}
+           height={160}
+          /></div>
 
           <button
             onClick={() => {
