@@ -89,6 +89,7 @@ export default function Home() {
       >
         <p style={{ opacity: 0.8, marginBottom: 18 }}>
           Share funny photos of <b>Minnie & Jason</b> 🤍
+          <div>Top 3 most-voted photos will win a prize!</div>
         </p>
 
         <div style={{ display: "grid", gap: 12 }}>
@@ -119,7 +120,7 @@ export default function Home() {
               display: "block",
               padding: "14px",
               borderRadius: 12,
-              border: "1px dashed rgba(188, 188, 188, 0.25)",
+              border: "1.5px dashed rgba(188, 188, 188, 0.25)",
               textAlign: "center",
               cursor: busy ? "not-allowed" : "pointer",
               opacity: busy ? 0.6 : 1,
