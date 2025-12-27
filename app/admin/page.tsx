@@ -50,13 +50,32 @@ export default function Home() {
 };
 
 async function loadTop3() {
-
   const { data, error } = await supabase
     .from("top3_winners")
     .select("id, storage_path, uploader_name, vote_count")
     .order("vote_count", { ascending: false })
-    .order("id", { ascending: true });
+    .order("id", { ascending: true })
+    .limit(3);
+
+  if (error) {
+    console.error("Failed to load top 3", error);
+    return;
+  }
+
+  const topForUi =
+    (data ?? []).map((p: any) => ({
+      id: p.id,
+      storage_path: p.storage_path,
+      uploader_name: p.uploader_name ?? "",
+      vote_count: p.vote_count ?? 0,
+      public_url: supabase.storage
+        .from("wedding-photos")
+        .getPublicUrl(p.storage_path).data.publicUrl,
+    })) ?? [];
+
+  setTop(topForUi);
 }
+
 
   async function refresh() {
     // 1) Load photos + vote counts (includes 0 votes)
@@ -170,21 +189,35 @@ async function toggleVoting() {
 
     useEffect(() => {
       refresh();
+      loadTop3();
       loadUploadingStatus();
       loadVotingStatus();
 
-    // Optional: realtime refresh when new photos/votes arrive
-    const channel = supabase
-      .channel("realtime-photos-votes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "photos" }, refresh)
-      .on("postgres_changes", { event: "*", schema: "public", table: "votes" }, refresh)
-      .subscribe();
+      const channel = supabase
+        .channel("realtime-gallery")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "photos" },
+          () => {
+            refresh(); // new photos affect gallery only
+          }
+        )
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "votes" },
+          () => {
+            refresh();   // votes affect gallery
+            loadTop3();  // votes affect top 3
+          }
+        )
+        .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      return () => {
+        supabase.removeChannel(channel);
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
 
   return (
     <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
