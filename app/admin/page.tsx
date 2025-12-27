@@ -293,10 +293,10 @@ async function toggleVoting() {
               <div key={p.id} style={{ border: "1px solid #eee", borderRadius: 12, overflow: "hidden" }}>
                 <img src={p.public_url} alt="" style={{ width: "100%", height: 180, objectFit: "cover" }} />
                 <div style={{ padding: 10, display: "grid", gap: 6 }}>
-                  <div style={{ fontSize: 12, opacity: 0.8 }}>
+                  <div style={{ fontSize: 14 }}>
                     {p.uploader_name ? `By ${p.uploader_name}` : " "}
                   </div>
-                  <div style={{ fontSize: 12, opacity: 0.8 }}>
+                  <div style={{ fontSize: 14 }}>
                     {p.vote_count ? `Votes ${p.vote_count}` : " "}
                   </div>
                 </div>
@@ -315,10 +315,10 @@ async function toggleVoting() {
               <div key={p.id} style={{ border: "1px solid #eee", borderRadius: 12, overflow: "hidden" }}>
                 <img src={p.public_url} alt="" style={{ width: "100%", height: 180, objectFit: "cover" }} />
                 <div style={{ padding: 10, display: "grid", gap: 6 }}>
-                  <div style={{ fontSize: 12, opacity: 0.8 }}>
+                  <div style={{ fontSize: 14 }}>
                     {p.uploader_name ? `By ${p.uploader_name}` : " "}
                   </div>
-                  <div style={{ fontSize: 12, opacity: 0.8 }}>
+                  <div style={{ fontSize: 14 }}>
                     {p.vote_count ? `Votes ${p.vote_count}` : " "}
                   </div>
                 </div>
