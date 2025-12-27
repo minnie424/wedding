@@ -105,7 +105,7 @@ export default function Home() {
   }
 }
 async function toggleUploading() {
-  setSavingVoting(true);
+  setSavingUploading(true);
 
   const res = await fetch("/api/admin", {
     method: "POST",
@@ -116,10 +116,10 @@ async function toggleUploading() {
   });
 
   const json = await res.json().catch(() => ({}));
-  setSavingVoting(false);
+  setSavingUploading(false);
 
   if (!res.ok) {
-    alert(JSON.stringify(json) || "Failed to update voting status");
+    alert(JSON.stringify(json) || "Failed to update uploading status");
     return;
   }
 
@@ -152,6 +152,7 @@ async function toggleVoting() {
 
     useEffect(() => {
       refresh();
+      loadUploadingStatus();
       loadVotingStatus();
 
     // Optional: realtime refresh when new photos/votes arrive
@@ -190,13 +191,13 @@ async function toggleVoting() {
       ? "Stop uploading"
       : "Start uploading"}
   </button>
-    
-    Voting status:{" "}
+    </div>
+    <div style={{ marginBottom: 8 }}>
+      Voting status:{" "}
     <b>
       {votingOpen === null ? "Loading…" : votingOpen ? "OPEN" : "CLOSED"}
     </b>
-  </div>
-
+  
   <button
     onClick={toggleVoting}
     disabled={savingVoting || votingOpen === null}
@@ -207,7 +208,7 @@ async function toggleVoting() {
       : votingOpen
       ? "Stop voting"
       : "Start voting"}
-  </button>
+  </button></div>
 
   <div style={{
     display: "flex",
