@@ -284,7 +284,7 @@ async function toggleVoting() {
 </a></div>
 
 </section>
-      <section>
+      <section style={{ marginBottom: 24, padding: 12}}>
         <h2>Top 3 Photos</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
           {top.map((p) => {
@@ -306,7 +306,7 @@ async function toggleVoting() {
         </div>
       </section>
 
-      <section>
+      <section style={{ marginBottom: 24, padding: 12}}>
         <h2>Live Gallery</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
           {photos.map((p) => {
