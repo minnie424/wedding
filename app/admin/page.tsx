@@ -14,12 +14,21 @@ type Photo = {
   vote_count: number;
 };
 
+type TopPhoto = {
+  id: string;
+  public_url: string;
+  storage_path: string;
+  uploader_name: string;
+  vote_count: number;
+};
+
 export default function Home() {
   const [files, setFiles] = useState<File[]>([]);
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
 
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [top, setTop] = useState<TopPhoto[]>([]);
   const [myVotes, setMyVotes] = useState<Set<string>>(new Set());
   const voterKey = useMemo(() => getVoterKey(), []);
   const [uploadingOpen, setUploadingOpen] = useState<boolean | null>(null);
@@ -39,6 +48,15 @@ export default function Home() {
     cursor: "pointer",
   },
 };
+
+async function loadTop3() {
+
+  const { data, error } = await supabase
+    .from("top3_winners")
+    .select("id, storage_path, uploader_name, vote_count")
+    .order("vote_count", { ascending: false })
+    .order("id", { ascending: true });
+}
 
   async function refresh() {
     // 1) Load photos + vote counts (includes 0 votes)
@@ -233,6 +251,27 @@ async function toggleVoting() {
 </a></div>
 
 </section>
+      <section>
+        <h2>Top 3 Photos</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
+          {top.map((p) => {
+            const voted = myVotes.has(p.id);
+            return (
+              <div key={p.id} style={{ border: "1px solid #eee", borderRadius: 12, overflow: "hidden" }}>
+                <img src={p.public_url} alt="" style={{ width: "100%", height: 180, objectFit: "cover" }} />
+                <div style={{ padding: 10, display: "grid", gap: 6 }}>
+                  <div style={{ fontSize: 12, opacity: 0.8 }}>
+                    {p.uploader_name ? `By ${p.uploader_name}` : " "}
+                  </div>
+                  <div style={{ fontSize: 12, opacity: 0.8 }}>
+                    {p.vote_count ? `Votes ${p.vote_count}` : " "}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
       <section>
         <h2>Live Gallery</h2>

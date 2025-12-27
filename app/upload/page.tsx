@@ -179,7 +179,11 @@
                 cursor: busy || !files.length || !name.trim() ? "not-allowed" : "pointer",
               }}
             >
-              {busy ? "Uploading..." : `Upload${files.length ? ` (${files.length})` : ""}`}
+              {uploadingOpen === false
+                ? "Uploading Closed"
+                : busy
+                ? "Uploading..."
+                : `Upload${files.length ? ` (${files.length})` : ""}`}
             </button>
           </div>
         </section>
