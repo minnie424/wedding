@@ -1,181 +1,188 @@
-"use client";
+  "use client";
 
-import { useMemo, useState, useRef } from "react";
-import { supabase } from "@/lib/supabase";
-import { getVoterKey } from "@/lib/voterKey";
-import { toJpegIfHeic } from "@/lib/heic";
+  import { useMemo, useState, useRef, useEffect } from "react";
+  import { supabase } from "@/lib/supabase";
+  import { getVoterKey } from "@/lib/voterKey";
+  import { toJpegIfHeic } from "@/lib/heic";
 
-type Photo = {
-  id: string;
-  created_at: string;
-  public_url: string;
-  uploader_name: string | null;
-  vote_count: number;
-};
+  type Photo = {
+    id: string;
+    created_at: string;
+    public_url: string;
+    uploader_name: string | null;
+    vote_count: number;
+  };
 
-export default function Home() {
-  const [files, setFiles] = useState<File[]>([]);
-  const [name, setName] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [uploadingOpen, setUploadingOpen] = useState<boolean | null>(null);
+  export default function Home() {
+    const [files, setFiles] = useState<File[]>([]);
+    const [name, setName] = useState("");
+    const [busy, setBusy] = useState(false);
+    const [uploadingOpen, setUploadingOpen] = useState<boolean | null>(null);
 
-  // (not used on upload page, but leaving as-is in case you need it elsewhere)
-  const voterKey = useMemo(() => getVoterKey(), []);
+    useEffect(() => {
+      loadUploadStatus();
+    }, []);
+    // (not used on upload page, but leaving as-is in case you need it elsewhere)
+    const voterKey = useMemo(() => getVoterKey(), []);
 
-  // ✅ Single input ref + remount key (iOS-friendly reset)
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [fileInputKey, setFileInputKey] = useState(0);
-  
-  async function loadUploadStatus() {
-    const res = await fetch("/api/admin", { method: "GET" });
-    const json = await res.json();
+    // ✅ Single input ref + remount key (iOS-friendly reset)
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [fileInputKey, setFileInputKey] = useState(0);
+    
+    async function loadUploadStatus() {
+      const res = await fetch("/api/admin", { method: "GET" });
+      const json = await res.json();
 
-    if (!res.ok) {
-      console.error("Failed to load settings", json);
-      setUploadingOpen(false);
-      return;
-    }
-
-    setUploadingOpen(!!json.settings?.uploading_open);
-  }
-
-  async function handleUpload() {
-    if (!name.trim()) {
-      alert("Please enter your name before uploading.");
-      return;
-    }
-    if (!files.length) return;
-
-    setBusy(true);
-    try {
-      for (const f of files) {
-        const file = await toJpegIfHeic(f);
-        const ext = file.name.split(".").pop() || "jpg";
-        const path = `${Date.now()}_${crypto.randomUUID()}.${ext}`;
-
-        const { error: upErr } = await supabase.storage
-          .from("wedding-photos")
-          .upload(path, file, { contentType: file.type, upsert: false });
-
-        if (upErr) throw upErr;
-
-        const { data: pub } = supabase.storage
-          .from("wedding-photos")
-          .getPublicUrl(path);
-
-        const public_url = pub.publicUrl;
-
-        const { error: dbErr } = await supabase.from("photos").insert({
-          storage_path: path,
-          public_url,
-          uploader_name: name || null,
-        });
-
-        if (dbErr) throw dbErr;
+      if (!res.ok) {
+        console.error("Failed to load settings", json);
+        setUploadingOpen(false);
+        return;
       }
 
-      // ✅ Clear selection AFTER successful upload
-      setFiles([]);
-      setFileInputKey((k) => k + 1); // remount input => clears filename on iOS
-      if (fileInputRef.current) fileInputRef.current.value = "";
-
-      alert("Successfully uploaded 🎉");
-    } catch (e: any) {
-      alert(e?.message || "Upload failed");
-    } finally {
-      setBusy(false);
+      setUploadingOpen(!!json.settings?.uploading_open);
     }
-  }
 
-  return (
-    <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
-      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
-        Minnie & Jason&apos;s Wedding Party
-      </h1>
+    async function handleUpload() {
+        if (uploadingOpen === false) {
+          alert("Photo uploading is now closed.");
+          return;
+        }
+      if (!name.trim()) {
+        alert("Please enter your name before uploading.");
+        return;
+      }
+      if (!files.length) return;
 
-      <section
-        style={{
-          border: "1px solid rgba(188, 188, 188, 0.25)",
-          borderRadius: 20,
-          padding: 24,
-          maxWidth: 420,
-        }}
-      >
-        <p style={{ opacity: 0.8, marginBottom: 18 }}>
-          Share funny photos of <b>Minnie & Jason</b> 🤍
-          <div>Top 3 most-voted photos will win a prize!</div>
-        </p>
+      setBusy(true);
+      try {
+        for (const f of files) {
+          const file = await toJpegIfHeic(f);
+          const ext = file.name.split(".").pop() || "jpg";
+          const path = `${Date.now()}_${crypto.randomUUID()}.${ext}`;
 
-        <div style={{ display: "grid", gap: 12 }}>
-          <input
-            type="text"
-            autoComplete="name"
-            autoCorrect="off"
-            autoCapitalize="words"
-            spellCheck={false}
-            value={name}
-            required
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your Name*"
-            style={{
-              width: "100%",
-              padding: "14px 16px",
-              borderRadius: 12,
-              border: "1px solid #000",
-              background: "#fff",
-              color: "#444",
-              fontSize: 16,
-            }}
-          />
+          const { error: upErr } = await supabase.storage
+            .from("wedding-photos")
+            .upload(path, file, { contentType: file.type, upsert: false });
 
-          {/* ✅ Label triggers hidden input */}
-          <label
-            style={{
-              display: "block",
-              padding: "14px",
-              borderRadius: 12,
-              border: "1.5px dashed rgba(188, 188, 188, 0.25)",
-              textAlign: "center",
-              cursor: busy ? "not-allowed" : "pointer",
-              opacity: busy ? 0.6 : 1,
-            }}
-          >
-            📷 Select photos from your phone
-            <div style={{ marginTop: 6, fontSize: 12, opacity: 0.7 }}>
-              {files.length ? `${files.length} photo(s) selected` : "No photos selected"}
-            </div>
+          if (upErr) throw upErr;
 
+          const { data: pub } = supabase.storage
+            .from("wedding-photos")
+            .getPublicUrl(path);
+
+          const public_url = pub.publicUrl;
+
+          const { error: dbErr } = await supabase.from("photos").insert({
+            storage_path: path,
+            public_url,
+            uploader_name: name || null,
+          });
+
+          if (dbErr) throw dbErr;
+        }
+
+        // ✅ Clear selection AFTER successful upload
+        setFiles([]);
+        setFileInputKey((k) => k + 1); // remount input => clears filename on iOS
+        if (fileInputRef.current) fileInputRef.current.value = "";
+
+        alert("Successfully uploaded 🎉");
+      } catch (e: any) {
+        alert(e?.message || "Upload failed");
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    return (
+      <main style={{ maxWidth: 980, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
+        <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
+          Minnie & Jason&apos;s Wedding Party
+        </h1>
+
+        <section
+          style={{
+            border: "1px solid rgba(188, 188, 188, 0.25)",
+            borderRadius: 20,
+            padding: 24,
+            maxWidth: 420,
+          }}
+        >
+          <p style={{ opacity: 0.8, marginBottom: 18 }}>
+            Share funny photos of <b>Minnie & Jason</b> 🤍
+            <div>Top 3 most-voted photos will win a prize!</div>
+          </p>
+
+          <div style={{ display: "grid", gap: 12 }}>
             <input
-              key={fileInputKey}
-              ref={fileInputRef}
-              type="file"
-              accept="image/*,.heic"
-              multiple
-              style={{ display: "none" }}     // ✅ hide native filename UI
-              disabled={busy}
-              onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
+              type="text"
+              autoComplete="name"
+              autoCorrect="off"
+              autoCapitalize="words"
+              spellCheck={false}
+              value={name}
+              required
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your Name*"
+              style={{
+                width: "100%",
+                padding: "14px 16px",
+                borderRadius: 12,
+                border: "1px solid #000",
+                background: "#fff",
+                color: "#444",
+                fontSize: 16,
+              }}
             />
-          </label>
 
-          <button
-            disabled={busy || !files.length || !name.trim()}
-            onClick={handleUpload}
-            style={{
-              width: "100%",
-              padding: "16px",
-              borderRadius: 14,
-              border: "1px solid #000",
-              background: busy ? "#444" :  "#f3f3f3",
-              color: "#000",
-              fontSize: 17,
-              fontWeight: 700,
-              cursor: busy || !files.length || !name.trim() ? "not-allowed" : "pointer",
-            }}
-          >
-            {busy ? "Uploading..." : `Upload${files.length ? ` (${files.length})` : ""}`}
-          </button>
-        </div>
-      </section>
-    </main>
-  );
-}
+            {/* ✅ Label triggers hidden input */}
+            <label
+              style={{
+                display: "block",
+                padding: "14px",
+                borderRadius: 12,
+                border: "1.5px dashed rgba(188, 188, 188, 0.25)",
+                textAlign: "center",
+                cursor: busy ? "not-allowed" : "pointer",
+                opacity: busy ? 0.6 : 1,
+              }}
+            >
+              📷 Select photos from your phone
+              <div style={{ marginTop: 6, fontSize: 12, opacity: 0.7 }}>
+                {files.length ? `${files.length} photo(s) selected` : "No photos selected"}
+              </div>
+
+              <input
+                key={fileInputKey}
+                ref={fileInputRef}
+                type="file"
+                accept="image/*,.heic"
+                multiple
+                style={{ display: "none" }}     // ✅ hide native filename UI
+                disabled={busy}
+                onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
+              />
+            </label>
+
+            <button
+              disabled={busy || uploadingOpen !== true || !files.length || !name.trim()}
+              onClick={handleUpload}
+              style={{
+                width: "100%",
+                padding: "16px",
+                borderRadius: 14,
+                border: "1px solid #000",
+                background: busy ? "#444" :  "#f3f3f3",
+                color: "#000",
+                fontSize: 17,
+                fontWeight: 700,
+                cursor: busy || !files.length || !name.trim() ? "not-allowed" : "pointer",
+              }}
+            >
+              {busy ? "Uploading..." : `Upload${files.length ? ` (${files.length})` : ""}`}
+            </button>
+          </div>
+        </section>
+      </main>
+    );
+  }
