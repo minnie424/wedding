@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
+    const { uploading_open } = await req.json();
     const { voting_open } = await req.json();
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -32,6 +33,7 @@ export async function POST(req: Request) {
           Prefer: "return=representation",
         },
         body: JSON.stringify({
+          uploading_open: !!uploading_open,
           voting_open: !!voting_open,
           updated_at: new Date().toISOString(),
         }),
@@ -49,7 +51,7 @@ export async function POST(req: Request) {
     return NextResponse.json(data, { status: res.status });
   } catch (e: any) {
     return NextResponse.json(
-      { error: e?.message ?? "Failed to update voting status" },
+      { error: e?.message ?? "Failed to update uploading/voting status" },
       { status: 500 }
     );
   }

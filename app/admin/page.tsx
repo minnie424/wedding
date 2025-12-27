@@ -178,7 +178,7 @@ async function toggleVoting() {
   <div style={{ marginBottom: 8 }}>
     Uploading status:{" "}
     <b>
-      {uploadingOpen === null ? "Loading…" : uploadingOpen ? "OPEN" : "CLOSED"}
+      {uploadingOpen === null ? "Loading…" : uploadingOpen ? "OPEN" : "CLOSED"}{" "}
     </b>
     <button
     onClick={toggleUploading}
@@ -195,7 +195,7 @@ async function toggleVoting() {
     <div style={{ marginBottom: 8 }}>
       Voting status:{" "}
     <b>
-      {votingOpen === null ? "Loading…" : votingOpen ? "OPEN" : "CLOSED"}
+      {votingOpen === null ? "Loading…" : votingOpen ? "OPEN" : "CLOSED"}{" "}
     </b>
   
   <button
