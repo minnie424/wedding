@@ -17,6 +17,7 @@ export default function Home() {
   const [files, setFiles] = useState<File[]>([]);
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [uploadingOpen, setUploadingOpen] = useState<boolean | null>(null);
 
   // (not used on upload page, but leaving as-is in case you need it elsewhere)
   const voterKey = useMemo(() => getVoterKey(), []);
@@ -24,6 +25,19 @@ export default function Home() {
   // ✅ Single input ref + remount key (iOS-friendly reset)
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [fileInputKey, setFileInputKey] = useState(0);
+  
+  async function loadUploadStatus() {
+    const res = await fetch("/api/admin", { method: "GET" });
+    const json = await res.json();
+
+    if (!res.ok) {
+      console.error("Failed to load settings", json);
+      setUploadingOpen(false);
+      return;
+    }
+
+    setUploadingOpen(!!json.settings?.uploading_open);
+  }
 
   async function handleUpload() {
     if (!name.trim()) {
