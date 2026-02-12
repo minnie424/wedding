@@ -40,7 +40,7 @@ export default function Home() {
   outlineButton: {
     padding: "10px 18px",
     borderRadius: 10,
-    border: "2px solid #333",
+    border: "2px solid #332",
     backgroundColor: "#fff",
     color: "#000",
     fontSize: 16,
